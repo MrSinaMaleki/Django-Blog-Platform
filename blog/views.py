@@ -17,6 +17,10 @@ def all_posts(request):
     serializer = PostSerializer(Post.objects.all(), many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def all_authors(request):
+    serializer = PostSerializer(Post.objects.all(), many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def one_post(request, pk):
