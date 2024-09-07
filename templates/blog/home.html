@@ -8,6 +8,21 @@
     <h2>All Blog Posts</h2>
     <div id="posts"></div>
 
+    <div id="create_form">
+        <label for="title">Title: </label>
+        <input type="text" placeholder="" id="title">
+
+        <label for="description">Description: </label>
+        <input type="text" placeholder="" id="description">
+
+        <label for="author-select">Choose an author:</label>
+        <select id="author-select">
+{#          <option value="volvo">Volvo</option>#}
+        </select>
+
+    </div>
+
+
 </body>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -38,6 +53,10 @@
 
                 })
             })
+    }
+
+    function f() {
+
     }
 
 </script>
