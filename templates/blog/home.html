@@ -5,6 +5,41 @@
     <title>Home</title>
 </head>
 <body>
+    <h2>All Blog Posts</h2>
+    <div id="posts"></div>
 
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetchPosts()
+    })
+
+    function fetchPosts() {
+        fetch('posts/')
+            .then(response => response.json())
+            .then(data => {
+                const container =  document.getElementById('posts')
+                data.forEach(post => {
+                    const postElement = document.createElement('div')
+                    postElement.className = ''
+
+                    console.log(post)
+                    postElement.innerHTML=
+                    `
+                        <h2>title: ${post.title}</h2>
+                        <h3>author: ${post.author}</h3>
+                        <p>description: ${post.description}</p>
+                        <p>created at: ${post.created_at}</p>
+                        <p>updated at: ${post.updated_at}</p>
+                        <hr>
+                    `
+
+                    container.appendChild(postElement)
+
+                })
+            })
+    }
+
+</script>
+
 </html>
