@@ -8,6 +8,10 @@ from blog.serializer import PostSerializer
 
 # Create your views here.
 
+
+def home(request):
+    return render(request, "blog/home.html",{})
+
 @api_view(['GET'])
 def all_posts(request):
     serializer = PostSerializer(Post.objects.all(), many=True)
