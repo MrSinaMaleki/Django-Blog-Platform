@@ -11,4 +11,6 @@ urlpatterns = [
     path('see_post/<int:pk>', views.one_post, name='one_post'),
     path('create_post/', views.add_new_post, name='add_new_post'),
 
+    path('update_post/<int:pk>', views.update_post, name='update_post'),
+
 ]

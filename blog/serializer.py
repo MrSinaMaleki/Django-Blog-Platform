@@ -9,10 +9,12 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['title', 'description', 'author', 'author_name', 'created_at', 'updated_at']
+        fields = ['id','title', 'description', 'author', 'author_name', 'created_at', 'updated_at']
 
     def get_author_name(self, obj):
         return obj.author.name  # Adjust based on the field you need
+
+
 
 
 class AuthorSerializer(serializers.ModelSerializer):

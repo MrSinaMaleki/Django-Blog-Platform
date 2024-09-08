@@ -28,8 +28,6 @@ def one_post(request, pk):
     serializer = PostSerializer(post)
     return Response(serializer.data)
 
-
-
 @api_view(['POST'])
 def add_new_post(request):
     # Convert author to integer
@@ -49,5 +47,12 @@ def add_new_post(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
+@api_view(['PUT'])
+def update_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    serializer = PostSerializer(post, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

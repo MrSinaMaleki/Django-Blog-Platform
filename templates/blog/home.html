@@ -9,6 +9,7 @@
     <div id="posts"></div>
 
     <form id="create_form" method="POST">
+        <h1>Create a new Post</h1>
         {% csrf_token %}
         <label for="title">Title: </label>
         <input type="text" placeholder="" id="title">
@@ -20,6 +21,26 @@
         <select id="author-select"></select>
 
         <button type="submit" style="width: 50px; height: 50px">Submit</button>
+
+    </form>
+
+
+    <form id="update_form" method="POST" style="display: none">
+    <h1>Update a Post</h1>
+    {% csrf_token %}
+    <label for="title_upgrade">Title: </label>
+    <input type="text" placeholder="" id="title_upgrade">
+
+    <label for="description">Description: </label>
+    <input type="text" placeholder="" id="description_upgrade">
+
+    <label for="author-select_upgrade">Choose an author:</label>
+    <select id="author-select">
+        <option disabled id="author_select_upgrade"></option>
+    </select>
+
+    <button type="submit" style="width: 50px; height: 50px">Submit</button>
+    <h6 id="pk" style="display: none"></h6>
 
     </form>
 
@@ -49,6 +70,10 @@
                         <p>description: ${post.description}</p>
                         <p>created at: ${post.created_at}</p>
                         <p>updated at: ${post.updated_at}</p>
+
+
+                        <button onclick="showUpdateForm(${post.id}, \`${post.title}\`, \`${post.description}\`, \`${post.author_name}\`)"></button>
+
                         <hr>
                     `
 
@@ -57,6 +82,7 @@
                 })
             })
     }
+
 
     function fetchAuthors() {
         fetch('/authors/')
@@ -80,6 +106,24 @@
     }
 
 
+
+    function showUpdateForm(pk, title, description, authorName) {
+        const createForm = document.getElementById("create_form")
+        const updateForm = document.getElementById("update_form")
+
+        // How can Find another approach ???
+        const pk_input = document.getElementById('pk').innerText = pk
+        const title_input = document.getElementById('title_upgrade').value = title
+        const description_input = document.getElementById('description_upgrade').value = description
+        const authorSelect_input = document.getElementById('author_select_upgrade').innerText = authorName
+        alert("Filled the form!")
+        updateForm.style.display = updateForm.style.display === 'none' ? '' : 'none';
+        createForm.style.display = createForm.style.display === 'none' ? '' : 'none';
+
+
+
+    }
+
     const create_form = document.getElementById('create_form')
     create_form.addEventListener("submit", (e) => {
         e.preventDefault()
@@ -93,13 +137,12 @@
         // console.log(authorSelect)
 
         const formData = new FormData();
-         formData.append('title', title)
+        formData.append('title', title)
         formData.append('description', description)
         formData.append('author', authorSelect)
 
         //console.log(formData['authroSelect'])
-//
-        //      // Log FormData entries
+        //Log FormData entries
         //for (let pair of formData.entries()) {
         //    console.log(`${pair[0]}: ${pair[1]}`);
         //}
@@ -116,6 +159,34 @@
         .catch(e => console.error(e))
 
     })
+
+    const update_form = document.getElementById('update_form')
+    update_form.addEventListener("submit", (e) => {
+         e.preventDefault()
+
+        const title = document.getElementById('title_upgrade').value
+        const description = document.getElementById('description_upgrade').value
+        const pk = document.getElementById('pk').innerText
+        console.log(pk)
+
+        const formData = new FormData();
+        formData.append('title', title)
+        formData.append('description', description)
+
+         fetch(`update_post/${pk}`, {
+            method:'PUT',
+            body:formData
+        })
+        .then(response => response.json())
+        .then(data =>{
+            alert("Update a post!")
+            fetchPosts()
+        })
+        .catch(e => console.error(e))
+
+    })
+
+
 
 </script>
 
