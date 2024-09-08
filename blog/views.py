@@ -3,8 +3,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from blog.models import Post
-from blog.serializer import PostSerializer
+from blog.models import Post, Author
+from blog.serializer import PostSerializer, AuthorSerializer
 
 # Create your views here.
 
@@ -19,7 +19,7 @@ def all_posts(request):
 
 @api_view(['GET'])
 def all_authors(request):
-    serializer = PostSerializer(Post.objects.all(), many=True)
+    serializer = AuthorSerializer(Author.objects.all(), many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -32,10 +32,20 @@ def one_post(request, pk):
 
 @api_view(['POST'])
 def add_new_post(request):
+    # Convert author to integer
+    # if 'author' in request.data:
+    #     try:
+    #         request.data._mutable = True  # Make QueryDict mutable
+    #         request.data['author'] = int(request.data['author'])
+    #     except ValueError:
+    #         return Response({'error': 'Invalid author ID'}, status=status.HTTP_400_BAD_REQUEST)
+
     serializer = PostSerializer(data=request.data)
+    print(request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    print(serializer.errors)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
