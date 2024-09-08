@@ -3,46 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
+     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h2>All Blog Posts</h2>
-    <div id="posts"></div>
 
-    <form id="create_form" method="POST">
-        <h1>Create a new Post</h1>
-        {% csrf_token %}
-        <label for="title">Title: </label>
-        <input type="text" placeholder="" id="title">
+    <style>
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+    </style>
 
-        <label for="description">Description: </label>
-        <input type="text" placeholder="" id="description">
+<body class="bg-gray-100  min-h-screen flex justify-center ">
 
-        <label for="author-select">Choose an author:</label>
-        <select id="author-select"></select>
+<div class="container mx-auto flex justify-center items-center  pl-8">
+   <div id="posts" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+</div>
 
-        <button type="submit" style="width: 50px; height: 50px">Submit</button>
+<form id="create_form" method="POST" class="w-96 max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold mb-4 text-gray-800">Create a New Post</h1>
 
-    </form>
-
-
-    <form id="update_form" method="POST" style="display: none">
-    <h1>Update a Post</h1>
     {% csrf_token %}
-    <label for="title_upgrade">Title: </label>
-    <input type="text" placeholder="" id="title_upgrade">
 
-    <label for="description">Description: </label>
-    <input type="text" placeholder="" id="description_upgrade">
+    <div class="mb-4">
+        <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+        <input type="text" id="title" placeholder="Enter the title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+    </div>
 
-    <label for="author-select_upgrade">Choose an author:</label>
-    <select id="author-select">
-        <option disabled id="author_select_upgrade"></option>
-    </select>
+    <div class="mb-4">
+        <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+        <input type="text" id="description" placeholder="Enter a description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+    </div>
 
-    <button type="submit" style="width: 50px; height: 50px">Submit</button>
-    <h6 id="pk" style="display: none"></h6>
+    <div class="mb-4">
+        <label for="author-select" class="block text-sm font-medium text-gray-700">Choose an Author</label>
+        <select id="author-select" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+        </select>
+    </div>
 
-    </form>
+    <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 text-base font-medium">
+        Submit
+    </button>
+</form>
+
+
+<form style="display: none" id="update_form" method="POST" class="w-96 max-w-lg mx-auto p-6 bg-gray-50 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold mb-4 text-gray-800">Update a Post</h1>
+
+    {% csrf_token %}
+    <div class="mb-4">
+        <label for="title_upgrade" class="block text-sm font-medium text-gray-700">Title</label>
+        <input type="text" id="title_upgrade" placeholder="Update the title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+    </div>
+
+    <div class="mb-4">
+        <label for="description_upgrade" class="block text-sm font-medium text-gray-700">Description</label>
+        <input type="text" id="description_upgrade" placeholder="Update the description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+    </div>
+
+    <div class="mb-4">
+        <label for="author-select_a" class="block text-sm font-medium text-gray-700">Choose an Author</label>
+        <select id="author-select_a" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm p-2">
+            <option id="author-select_upgrade" disabled selected></option>
+        </select>
+    </div>
+
+    <button type="submit" class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 text-base font-medium">
+        Update
+    </button>
+
+    <h6 id="pk" class="hidden"></h6>
+</form>
+
 
 
 </body>
@@ -65,16 +97,22 @@
                     console.log(post.author)
                     postElement.innerHTML=
                     `
-                        <h2>title: ${post.title}</h2>
-                        <h3>author: ${post.author_name}</h3>
-                        <p>description: ${post.description}</p>
-                        <p>created at: ${post.created_at}</p>
-                        <p>updated at: ${post.updated_at}</p>
 
-
-                        <button onclick="showUpdateForm(${post.id}, \`${post.title}\`, \`${post.description}\`, \`${post.author_name}\`)"></button>
-
-                        <hr>
+                        <div class="card bg-gradient-to-r from-blue-400 to-blue-600 text-white p-6 rounded-lg shadow-lg transition-transform duration-300 ease-in-out flex flex-col justify-between h-80">
+                             <div>
+                                 <h2 class="text-2xl font-semibold mb-2">Title: ${post.title}</h2>
+                                 <p class="text-gray-200 mb-2">Author: ${post.author_name}</p>
+                                 <p class="text-gray-100 mb-4">Description: ${post.description} </p>
+                            </div>
+                            <div>
+                                <p class="text-gray-200 text-sm mb-2">Created At: ${post.created_at}</p>
+                                <p class="text-gray-200 text-sm mb-4">Updated At: ${post.updated_at}</p>
+                                <div class="flex justify-between">
+                                    <button onclick="deletePost(${post.id})" class="bg-red-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-red-600 transition-colors duration-300" >Delete</button>
+                                    <button onclick="showUpdateForm(${post.id}, \`${post.title}\`, \`${post.description}\`, \`${post.author_name}\`)"  class="bg-blue-500 text-white py-2 px-4 rounded-md shadow-md hover:bg-blue-600 transition-colors duration-300" >Update</button>
+                                </div>
+                            </div>
+                        </div>
                     `
 
                     container.appendChild(postElement)
@@ -113,14 +151,30 @@
 
         // How can Find another approach ???
         const pk_input = document.getElementById('pk').innerText = pk
+
         const title_input = document.getElementById('title_upgrade').value = title
         const description_input = document.getElementById('description_upgrade').value = description
-        const authorSelect_input = document.getElementById('author_select_upgrade').innerText = authorName
+        console.log(authorName)
+        const authorSelect_input = document.getElementById('author-select_upgrade').innerText = authorName
+
         alert("Filled the form!")
         updateForm.style.display = updateForm.style.display === 'none' ? '' : 'none';
         createForm.style.display = createForm.style.display === 'none' ? '' : 'none';
 
 
+
+    }
+
+
+    function deletePost(pk) {
+        fetch(`delete_post/${pk}`, {
+            method: "DELETE"
+        })
+        .then(function () {
+            alert("The post has been successfully deleted")
+            fetchPosts()
+        })
+        .catch(e => console.log(e))
 
     }
 
@@ -185,7 +239,6 @@
         .catch(e => console.error(e))
 
     })
-
 
 
 </script>
